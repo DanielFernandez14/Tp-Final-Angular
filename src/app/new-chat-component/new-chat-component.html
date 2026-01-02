@@ -1,25 +1,27 @@
-<h2>Nuevo chat</h2>
+<section class="nuevo-chat">
+    <h2 class="titulo-seccion">Nuevo chat</h2>
 
-<form [formGroup]="form" (ngSubmit)="create()">
-    <label>
-    Nombre:
-    <input formControlName="name" />
+    <form class="formulario" [formGroup]="form" (ngSubmit)="create()">
+    <label class="campo">
+        <span class="etiqueta">Nombre:</span>
+        <input class="entrada" formControlName="name" />
     </label>
 
     @if (nameCtrl?.touched && nameCtrl?.invalid) {
-    <div>
+        <div class="errores-form">
         @if (nameCtrl?.errors?.['required']) { <small>El nombre es obligatorio</small> }
         @if (nameCtrl?.errors?.['minlength']) { <small>Mínimo 2 caracteres</small> }
-    </div>
+        </div>
     }
 
-    <label>
-    Mensaje Inicial (opcional)
-    <input formControlName="initial" />
+    <label class="campo">
+        <span class="etiqueta">Mensaje Inicial (opcional)</span>
+        <input class="entrada" formControlName="initial" />
     </label>
 
-    <div>
-    <button type="submit">Crear</button>
-    <button type="button" (click)="cancel()">Cancelar</button>
+    <div class="acciones-form">
+        <button class="boton boton--primario" type="submit">Crear</button>
+        <button class="boton boton--secundario" type="button" (click)="cancel()">Cancelar</button>
     </div>
-</form>
+    </form>
+</section>

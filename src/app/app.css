@@ -1,0 +1,52 @@
+.barra-superior {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--borde);
+    background: rgba(17, 27, 33, 0.72);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.titulo-app {
+    font-weight: 900;
+    letter-spacing: 0.25px;
+    user-select: text;
+    cursor: pointer;
+    padding: 8px 10px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.titulo-app:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.contenido-app {
+    flex: 1;
+    min-height: 0;
+    padding: 12px;
+}
+
+@media (min-width: 480px) {
+    .contenido-app {
+        padding: 14px;
+    }
+}
+
+@media (min-width: 768px) {
+    .contenido-app {
+        padding: 16px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .contenido-app {
+        padding: 18px;
+    }
+}

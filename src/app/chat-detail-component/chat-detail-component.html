@@ -1,32 +1,46 @@
 @if (chatSignal(); as chat) {
-    <header>
-        <h2>{{ chat.name }}</h2>
-        <span>{{ chat.messages.length }} mensajes</span>
-    </header>
+    <section class="detalle-chat">
+        <header class="encabezado-chat">
+            <div class="encabezado-chat__texto">
+                <a class="volver-chat" routerLink="/chats">←</a>
+                <h2 class="nombre-contacto">{{ chat.name }}</h2>
+                <span class="meta-chat">{{ chat.messages.length }} mensajes</span>
+            </div>
+        </header>
 
-    <div>
-    @for (message of chat.messages; track message.id) {
-        <div>
-            <p>{{ message.text }}</p>
-            <div>{{ formatDate(message.date) }}</div>
+        <div class="historial">
+            @for (message of chat.messages; track message.id) {
+                <div
+                    class="fila-mensaje"
+                    [class.fila-mensaje--usuario]="message.fromMe"
+                    [class.fila-mensaje--app]="!message.fromMe"
+                >
+                    <div
+                        class="burbuja"
+                        [class.burbuja--usuario]="message.fromMe"
+                        [class.burbuja--app]="!message.fromMe"
+                    >
+                        <p class="texto-mensaje">{{ message.text }}</p>
+                        <div class="hora-mensaje">{{ formatDate(message.date) }}</div>
+                    </div>
+                </div>
+            } @empty {
+                <div class="vacio-chat">No hay mensajes</div>
+            }
         </div>
-    } @empty {
-        <div>No hay mensajes</div>
-    }
-    </div>
 
-    <form (ngSubmit)="send()">
-    <input [formControl]="messageCtrl" placeholder="Escribe un mensaje" />
+        <form class="composer" [formGroup]="form" (ngSubmit)="send()">
+            <input class="entrada-mensaje" formControlName="text" placeholder="Escribe un mensaje" />
+            <button class="boton boton--enviar" type="submit">Enviar</button>
+        </form>
 
-    @if (messageCtrl.touched && messageCtrl.invalid) {
-        <div>
-            @if (messageCtrl.errors?.['required']) { <small>El mensaje es obligatorio</small> }
-            @if (messageCtrl.errors?.['maxlength']) { <small>Máximo 500 caracteres</small> }
-        </div>
-    }
-
-    <button type="submit">Enviar</button>
-    </form>
+        @if (messageCtrl.touched && messageCtrl.invalid) {
+            <div class="errores-form">
+                @if (messageCtrl.errors?.["required"]) { <small>El mensaje es obligatorio</small> }
+                @if (messageCtrl.errors?.["maxlength"]) { <small>Máximo 500 caracteres</small> }
+            </div>
+        }
+    </section>
 } @else {
-    <h2>Chat no encontrado</h2>
+    <h2 class="no-encontrado">Chat no encontrado</h2>
 }

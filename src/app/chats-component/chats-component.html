@@ -1,17 +1,36 @@
-<section>
-    <header>
-        <h2>Chats</h2>
-        <button type="button" (click)="nuevo()">Nuevo</button>
+<section class="lista-chats">
+    <header class="encabezado-lista">
+    <h2 class="titulo-seccion">Chats</h2>
+    <button class="boton boton--primario" type="button" (click)="nuevo()">Nuevo</button>
     </header>
 
-    <ul>
+    <ul class="items-chats">
     @for (chat of chatService.chats(); track chat.id) {
-        <li (click)="open(chat.id)" style="cursor: pointer;">
-        <div>{{ chat.name }}</div>
-        <div>{{ chat.lastMessage || '-' }}</div>
+        <li class="item-chat" (click)="open(chat.id)">
+        <img
+            class="avatar-chat"
+            [src]="chat.avatarUrl || '/avatars/1.png'"
+            alt="avatar"
+            width="40"
+            height="40"
+        />
+
+        <div class="info-chat">
+            <div class="fila-chat">
+            <div class="nombre-chat">{{ chat.name }}</div>
+
+            @if (chat.status === 'online') {
+                <span class="estado estado--online">● Online</span>
+            } @else {
+                <span class="estado estado--offline">Última vez: {{ formatDate(chat.lastSeen) }}</span>
+            }
+            </div>
+
+            <div class="ultimo-mensaje">{{ chat.lastMessage || '-' }}</div>
+        </div>
         </li>
     } @empty {
-        <li>No hay chats aún</li>
+        <li class="vacio-lista">No hay chats aún</li>
     }
     </ul>
 </section>
