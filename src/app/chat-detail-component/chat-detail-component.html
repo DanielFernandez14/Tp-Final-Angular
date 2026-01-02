@@ -1,0 +1,32 @@
+@if (chatSignal(); as chat) {
+    <header>
+        <h2>{{ chat.name }}</h2>
+        <span>{{ chat.messages.length }} mensajes</span>
+    </header>
+
+    <div>
+    @for (message of chat.messages; track message.id) {
+        <div>
+            <p>{{ message.text }}</p>
+            <div>{{ formatDate(message.date) }}</div>
+        </div>
+    } @empty {
+        <div>No hay mensajes</div>
+    }
+    </div>
+
+    <form (ngSubmit)="send()">
+    <input [formControl]="messageCtrl" placeholder="Escribe un mensaje" />
+
+    @if (messageCtrl.touched && messageCtrl.invalid) {
+        <div>
+            @if (messageCtrl.errors?.['required']) { <small>El mensaje es obligatorio</small> }
+            @if (messageCtrl.errors?.['maxlength']) { <small>Máximo 500 caracteres</small> }
+        </div>
+    }
+
+    <button type="submit">Enviar</button>
+    </form>
+} @else {
+    <h2>Chat no encontrado</h2>
+}

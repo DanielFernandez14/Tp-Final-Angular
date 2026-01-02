@@ -1,0 +1,17 @@
+<section>
+    <header>
+        <h2>Chats</h2>
+        <button type="button" (click)="nuevo()">Nuevo</button>
+    </header>
+
+    <ul>
+    @for (chat of chatService.chats(); track chat.id) {
+        <li (click)="open(chat.id)" style="cursor: pointer;">
+        <div>{{ chat.name }}</div>
+        <div>{{ chat.lastMessage || '-' }}</div>
+        </li>
+    } @empty {
+        <li>No hay chats aún</li>
+    }
+    </ul>
+</section>

@@ -1,0 +1,25 @@
+<h2>Nuevo chat</h2>
+
+<form [formGroup]="form" (ngSubmit)="create()">
+    <label>
+    Nombre:
+    <input formControlName="name" />
+    </label>
+
+    @if (nameCtrl?.touched && nameCtrl?.invalid) {
+    <div>
+        @if (nameCtrl?.errors?.['required']) { <small>El nombre es obligatorio</small> }
+        @if (nameCtrl?.errors?.['minlength']) { <small>Mínimo 2 caracteres</small> }
+    </div>
+    }
+
+    <label>
+    Mensaje Inicial (opcional)
+    <input formControlName="initial" />
+    </label>
+
+    <div>
+    <button type="submit">Crear</button>
+    <button type="button" (click)="cancel()">Cancelar</button>
+    </div>
+</form>
