@@ -47,3 +47,5 @@ npm install
 ```bash
 npm run start
 ```
+3) Abrir en el navegador:
+http://localhost:4200
