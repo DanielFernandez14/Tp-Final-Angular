@@ -1,59 +1,53 @@
-# TpFinal
+# ChatAngular — Trabajo Final Integrador
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.2.
+Clon simple de chat desarrollado con **Angular 17** aplicando: **Standalone Components**, **Routing con provideRouter**, **Reactive Forms**, **Control Flow Blocks (@if / @for)**, **CSS nativo responsive** y organización por **services / interfaces / pipes**.
 
-## Development server
+---
 
-To start a local development server, run:
+## Objetivo
 
+Construir una aplicación estilo chat aplicando los conceptos centrales de Angular 17, con dos paneles (lista de chats + conversación) y navegación por rutas.
+
+---
+
+## Funcionalidades implementadas
+
+### Panel lateral (lista de chats)
+- Lista de contactos con **avatar, nombre y estado**: online / offline / última vez.
+- **Crear nuevos chats** dinámicamente mediante **formulario reactivo** (validación requerida y minlength).
+- Uso de directivas modernas de Angular 17: `@for` y `@if`.:contentReference[oaicite:7]{index=7}
+
+### Panel principal (conversación)
+- Historial de mensajes **independiente por chat**.
+- Envío de mensaje y **respuesta automática** luego de un retardo.
+- Input con **Reactive Forms + validaciones** (required y maxLength).
+- Diferenciación visual:
+  - Usuario → alineado a la derecha
+  - App → alineado a la izquierda:contentReference[oaicite:11]{index=11}
+
+### Routing
+- `/chats` → lista (y layout principal)
+- `/chats/:id` → detalle de conversación
+- `/nuevo` → formulario de creación de chat.
+
+### Extras (bonus)
+- Buscador de chats en la barra lateral.
+- Pipe personalizado para formateo de fechas.
+- Uso de **signals** para el estado global.
+
+---
+
+## Instalación y ejecución (local)
+
+1) Instalar dependencias:
 ```bash
-ng serve
+npm install
+```
+2) Levantar servidor de desarrollo:
+```bash
+ng serve -o
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Abrir en el navegador:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+http://localhost:4200

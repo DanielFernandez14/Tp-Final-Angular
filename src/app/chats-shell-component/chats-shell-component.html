@@ -4,6 +4,15 @@
     </aside>
 
     <main class="panel-conversacion">
-        <router-outlet></router-outlet>
+        <div class="panel-conversacion__inner">
+            @if (!enDetalle()) {
+                <div class="estado-vacio">
+                    <h2>Seleccioná un chat</h2>
+                    <p>Elegí un contacto de la lista para ver la conversación.</p>
+                </div>
+            }
+
+            <router-outlet></router-outlet>
+        </div>
     </main>
 </section>

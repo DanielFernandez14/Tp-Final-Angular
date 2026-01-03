@@ -1,14 +1,45 @@
 @if (chatSignal(); as chat) {
     <section class="detalle-chat">
         <header class="encabezado-chat">
-            <div class="encabezado-chat__texto">
-                <a class="volver-chat" routerLink="/chats">←</a>
-                <h2 class="nombre-contacto">{{ chat.name }}</h2>
-                <span class="meta-chat">{{ chat.messages.length }} mensajes</span>
-            </div>
-        </header>
+    <div class="encabezado-chat__texto">
+        <a class="volver-chat" routerLink="/chats">←</a>
 
-        <div class="historial">
+        <div class="perfil-chat">
+            @if (chat.avatarUrl) {
+                <img class="avatar-chat" [src]="chat.avatarUrl" [alt]="'Foto de ' + chat.name" />
+            } @else {
+                <div class="avatar-chat avatar-chat--placeholder" aria-hidden="true">
+                    {{ chat.name.slice(0, 1).toUpperCase() }}
+                </div>
+            }
+
+            <div class="encabezado-chat__principal">
+                <h2 class="nombre-contacto">{{ chat.name }}</h2>
+
+                <div class="estado-chat">
+                    <span class="punto-estado" [class.punto-estado--online]="chat.status === 'online'"></span>
+
+                    @if (chat.status === 'online') {
+                        <span class="estado-texto">Online</span>
+                    } @else {
+                        <span class="estado-texto">
+                            Última vez: {{ chat.lastSeen | fecha:'completo' }}
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <span class="meta-chat">{{ chat.messages.length }} mensajes</span>
+    </div>
+</header>
+
+
+        <div class="historial" #historialViewport>
+            @if (chat.messages.length > 0) {
+                <div class="historial__spacer"></div>
+            }
+
             @for (message of chat.messages; track message.id) {
                 <div
                     class="fila-mensaje"
@@ -21,7 +52,7 @@
                         [class.burbuja--app]="!message.fromMe"
                     >
                         <p class="texto-mensaje">{{ message.text }}</p>
-                        <div class="hora-mensaje">{{ formatDate(message.date) }}</div>
+                        <div class="hora-mensaje">{{ message.date | fecha:'hora' }}</div>
                     </div>
                 </div>
             } @empty {
@@ -35,9 +66,13 @@
         </form>
 
         @if (messageCtrl.touched && messageCtrl.invalid) {
-            <div class="errores-form">
-                @if (messageCtrl.errors?.["required"]) { <small>El mensaje es obligatorio</small> }
-                @if (messageCtrl.errors?.["maxlength"]) { <small>Máximo 500 caracteres</small> }
+            <div class="errores-form" role="alert" aria-live="polite">
+                @if (messageCtrl.errors?.["required"]) {
+                    <small class="error-item">Es necesario agregar un mensaje que enviar :)</small>
+                }
+                @if (messageCtrl.errors?.["maxlength"]) {
+                    <small class="error-item">Máximo 500 caracteres</small>
+                }
             </div>
         }
     </section>

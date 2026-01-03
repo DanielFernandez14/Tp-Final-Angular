@@ -1,36 +1,52 @@
 <section class="lista-chats">
     <header class="encabezado-lista">
-    <h2 class="titulo-seccion">Chats</h2>
-    <button class="boton boton--primario" type="button" (click)="nuevo()">Nuevo</button>
+        <h2 class="titulo-seccion">Chats</h2>
+        <button class="boton boton--primario" type="button" (click)="nuevo()">Nuevo</button>
     </header>
 
-    <ul class="items-chats">
-    @for (chat of chatService.chats(); track chat.id) {
-        <li class="item-chat" (click)="open(chat.id)">
-        <img
-            class="avatar-chat"
-            [src]="chat.avatarUrl || '/avatars/1.png'"
-            alt="avatar"
-            width="40"
-            height="40"
+    <div class="buscador">
+        <input
+            class="buscador__input"
+            [formControl]="queryCtrl"
+            type="text"
+            placeholder="Buscar chats..."
+            autocomplete="off"
         />
 
-        <div class="info-chat">
-            <div class="fila-chat">
-            <div class="nombre-chat">{{ chat.name }}</div>
+        @if (queryCtrl.value) {
+            <button class="buscador__clear" type="button" (click)="clearSearch()">×</button>
+        }
+    </div>
 
-            @if (chat.status === 'online') {
-                <span class="estado estado--online">● Online</span>
-            } @else {
-                <span class="estado estado--offline">Última vez: {{ formatDate(chat.lastSeen) }}</span>
-            }
-            </div>
+    <ul class="items-chats">
+        @for (chat of chatsFiltrados(); track chat.id) {
+            <li class="item-chat" (click)="open(chat.id)">
+                <img
+                    class="avatar-chat"
+                    [src]="chat.avatarUrl || '/avatars/1.png'"
+                    alt="avatar"
+                    width="40"
+                    height="40"
+                />
 
-            <div class="ultimo-mensaje">{{ chat.lastMessage || '-' }}</div>
-        </div>
-        </li>
-    } @empty {
-        <li class="vacio-lista">No hay chats aún</li>
-    }
+                <div class="info-chat">
+                    <div class="fila-chat">
+                        <div class="nombre-chat">{{ chat.name }}</div>
+
+                        @if (chat.status === 'online') {
+                            <span class="estado estado--online">● Online</span>
+                        } @else {
+                            <span class="estado estado--offline">
+                                Última vez: {{ chat.lastSeen | fecha:'completo' }}
+                            </span>
+                        }
+                    </div>
+
+                    <div class="ultimo-mensaje">{{ chat.lastMessage || '-' }}</div>
+                </div>
+            </li>
+        } @empty {
+            <li class="vacio-lista">No hay chats que coincidan</li>
+        }
     </ul>
 </section>

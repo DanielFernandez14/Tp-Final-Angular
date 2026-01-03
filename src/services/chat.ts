@@ -1,44 +1,18 @@
 import { Injectable, Signal, WritableSignal, computed, signal } from "@angular/core";
 import { Chat } from "../interfaces/chat";
 import { Message } from "../interfaces/message";
+import { createMockChats } from "./chat.mock";
+import { makeId } from "./chat.utils";
+import { AUTO_OFFLINE_DELAY_MS, AUTO_REPLY_DELAY_MS, AUTO_REPLIES } from "./chat-constants";
 
 @Injectable({
     providedIn: "root",
 })
 export class ChatService {
-    private readonly _chats: WritableSignal<Chat[]> = signal(this.createMock());
+    private readonly _chats: WritableSignal<Chat[]> = signal(createMockChats(makeId));
     public readonly chats: Signal<Chat[]> = this._chats.asReadonly();
 
-    private readonly AUTO_REPLY_DELAY_MS: number = 1200;
-
-    private createMock(): Chat[] {
-        const now: string = new Date().toISOString();
-
-        const messages: Message[] = [
-            { id: this.makeId(), text: "Hola!", fromMe: false, date: now },
-            { id: this.makeId(), text: "Todo bien?", fromMe: false, date: now },
-        ];
-
-        return [
-            {
-                id: "1",
-                name: "Alicia",
-                lastMessage: messages[messages.length - 1]?.text ?? "",
-                avatarUrl: "/avatars/1.png",
-                status: "online",
-                lastSeen: now,
-                messages,
-            },
-        ];
-    }
-
-    private makeId(): string {
-        try {
-            return crypto.randomUUID();
-        } catch {
-            return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-        }
-    }
+    private readonly offlineTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
     getChatsSnapshot(): Chat[] {
         return this._chats();
@@ -57,7 +31,7 @@ export class ChatService {
         const now: string = new Date().toISOString();
 
         const newChat: Chat = {
-            id: this.makeId(),
+            id: makeId(),
             name: cleanName,
             lastMessage: "",
             avatarUrl: "/avatars/1.png",
@@ -66,7 +40,7 @@ export class ChatService {
             messages: [],
         };
 
-        this._chats.update((actuales) => [...actuales, newChat]);
+        this._chats.update((actuales) => [newChat, ...actuales]);
         return newChat;
     }
 
@@ -80,26 +54,40 @@ export class ChatService {
         const now: string = new Date().toISOString();
 
         const newMessage: Message = {
-            id: this.makeId(),
+            id: makeId(),
             text: cleanText,
             fromMe,
             date: now,
         };
 
-        this._chats.update((actuales) =>
-            actuales.map((chat) => {
+        this._chats.update((actuales) => {
+            let updatedChat: Chat | undefined;
+
+            const mapped: Chat[] = actuales.map((chat) => {
                 if (chat.id !== chatId) return chat;
 
                 const updatedMessages: Message[] = [...chat.messages, newMessage];
 
-                return {
+                updatedChat = {
                     ...chat,
                     messages: updatedMessages,
                     lastMessage: cleanText,
-                    lastSeen: fromMe ? chat.lastSeen : now,
+                    status: !fromMe ? "online" : chat.status,
+                    lastSeen: !fromMe ? now : chat.lastSeen,
                 };
-            })
-        );
+
+                return updatedChat;
+            });
+
+            if (!updatedChat) return mapped;
+
+            const rest: Chat[] = mapped.filter((c) => c.id !== chatId);
+            return [updatedChat, ...rest];
+        });
+
+        if (!fromMe) {
+            this.scheduleAutoOffline(chatId);
+        }
 
         if (fromMe) {
             this.scheduleAutoReply(chatId);
@@ -115,11 +103,28 @@ export class ChatService {
 
             const replyText: string = this.buildAutoReply();
             this.sendMessage(chatId, replyText, false);
-        }, this.AUTO_REPLY_DELAY_MS);
+        }, AUTO_REPLY_DELAY_MS);
+    }
+
+    private scheduleAutoOffline(chatId: string): void {
+        const prev = this.offlineTimers.get(chatId);
+        if (prev) clearTimeout(prev);
+
+        const t = setTimeout(() => {
+            const stillExists: boolean = this._chats().some((c) => c.id === chatId);
+            if (!stillExists) return;
+
+            this._chats.update((actuales) =>
+                actuales.map((c) => (c.id === chatId ? { ...c, status: "offline" } : c))
+            );
+
+            this.offlineTimers.delete(chatId);
+        }, AUTO_OFFLINE_DELAY_MS);
+
+        this.offlineTimers.set(chatId, t);
     }
 
     private buildAutoReply(): string {
-        const replies: string[] = ["Dale, entendido.", "Perfecto.", "Ok, sigo acá.", "Copiado.", "De una."];
-        return replies[Math.floor(Math.random() * replies.length)];
+        return AUTO_REPLIES[Math.floor(Math.random() * AUTO_REPLIES.length)];
     }
 }

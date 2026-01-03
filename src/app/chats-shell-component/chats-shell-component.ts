@@ -18,17 +18,18 @@ export class ChatsShellComponent {
         this.enDetalle.set(this.esDetalle(this.router.url));
 
         this.router.events
-            .pipe(filter((e) => e instanceof NavigationEnd))
-            .subscribe(() => {
-                this.enDetalle.set(this.esDetalle(this.router.url));
+            .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+            .subscribe((e) => {
+                this.enDetalle.set(this.esDetalle(e.urlAfterRedirects));
             });
     }
 
     private esDetalle(url: string): boolean {
         const normalizada = (url || "").split("?")[0].split("#")[0];
+
         if (normalizada === "/chats") return false;
-        if (normalizada.startsWith("/nuevo")) return false;
-        if (normalizada.startsWith("/chats/nuevo")) return false;
+        if (normalizada === "/nuevo") return false;
+
         return /^\/chats\/[^/]+$/.test(normalizada);
     }
 }

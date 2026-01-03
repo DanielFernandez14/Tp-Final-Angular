@@ -1,27 +1,29 @@
-<section class="nuevo-chat">
-    <h2 class="titulo-seccion">Nuevo chat</h2>
+<section class="nuevo-chat-wrapper">
+    <section class="nuevo-chat">
+        <h2 class="titulo-seccion">Nuevo chat</h2>
 
-    <form class="formulario" [formGroup]="form" (ngSubmit)="create()">
-    <label class="campo">
-        <span class="etiqueta">Nombre:</span>
-        <input class="entrada" formControlName="name" />
-    </label>
+        <form class="formulario" [formGroup]="form" (ngSubmit)="create()">
+            <label class="campo">
+                <span class="etiqueta">Nombre:</span>
+                <input class="entrada" formControlName="name" />
+            </label>
 
-    @if (nameCtrl?.touched && nameCtrl?.invalid) {
-        <div class="errores-form">
-        @if (nameCtrl?.errors?.['required']) { <small>El nombre es obligatorio</small> }
-        @if (nameCtrl?.errors?.['minlength']) { <small>Mínimo 2 caracteres</small> }
-        </div>
-    }
+            @if (nameCtrl?.touched && nameCtrl?.invalid) {
+                <div class="errores-form">
+                    @if (nameCtrl?.errors?.['required']) { <small>El nombre es obligatorio</small> }
+                    @if (nameCtrl?.errors?.['minlength']) { <small>Mínimo 2 caracteres</small> }
+                </div>
+            }
 
-    <label class="campo">
-        <span class="etiqueta">Mensaje Inicial (opcional)</span>
-        <input class="entrada" formControlName="initial" />
-    </label>
+            <label class="campo">
+                <span class="etiqueta">Mensaje Inicial (opcional)</span>
+                <input class="entrada" formControlName="initial" />
+            </label>
 
-    <div class="acciones-form">
-        <button class="boton boton--primario" type="submit">Crear</button>
-        <button class="boton boton--secundario" type="button" (click)="cancel()">Cancelar</button>
-    </div>
-    </form>
+            <div class="acciones-form">
+                <button class="boton boton--primario" type="submit">Crear</button>
+                <button class="boton boton--secundario" type="button" (click)="cancel()">Cancelar</button>
+            </div>
+        </form>
+    </section>
 </section>
