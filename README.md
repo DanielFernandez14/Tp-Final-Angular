@@ -15,7 +15,7 @@ Construir una aplicación estilo chat aplicando los conceptos centrales de Angul
 ### Panel lateral (lista de chats)
 - Lista de contactos con **avatar, nombre y estado**: online / offline / última vez.
 - **Crear nuevos chats** dinámicamente mediante **formulario reactivo** (validación requerida y minlength).
-- Uso de directivas modernas de Angular 17: `@for` y `@if`.:contentReference[oaicite:7]{index=7}
+- Uso de directivas modernas de Angular 17: `@for` y `@if`.
 
 ### Panel principal (conversación)
 - Historial de mensajes **independiente por chat**.
@@ -23,7 +23,7 @@ Construir una aplicación estilo chat aplicando los conceptos centrales de Angul
 - Input con **Reactive Forms + validaciones** (required y maxLength).
 - Diferenciación visual:
   - Usuario → alineado a la derecha
-  - App → alineado a la izquierda:contentReference[oaicite:11]{index=11}
+  - App → alineado a la izquierda.
 
 ### Routing
 - `/chats` → lista (y layout principal)
@@ -45,9 +45,5 @@ npm install
 ```
 2) Levantar servidor de desarrollo:
 ```bash
-ng serve -o
+npm run start
 ```
-
-Abrir en el navegador:
-
-http://localhost:4200
